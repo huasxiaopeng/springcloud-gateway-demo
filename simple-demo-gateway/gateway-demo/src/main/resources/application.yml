@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        - id : web_route
+#          uri: lb://web-dubbo
+          predicates:
+            - Path= /gateway/**     #在映射路径前追加路径
+          filters:
+            - StripPrefix=1   #过滤匹配中的 /gateway/ 直接匹配后面的路径
+          uri: http://localhost:8083   #转发地址
+        - id: cookie_route #在创建一个路由规则
+          predicates:
+            - Cookie=name,lktbz   #cookie 中的参数带有name
+          uri: http://www.baidu.com  #cookie 条件满足，则跳转到百度
+#      httpclient:
+#        connect-timeout: 1    超时设置
+#        response-timeout: 1s
+
